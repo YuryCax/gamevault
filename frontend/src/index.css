@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-dark: #1E2A44;
+  --accent-green: #39FF14;
+  --bg-dark: #121212;
+  --admin-primary: #2D3748;
+  --admin-accent: #F6AD55;
+  --admin-bg-light: #EDF2F7;
+}
+
+body {
+  @apply bg-[var(--bg-dark)] text-white font-inter;
+}
+
+.admin-panel {
+  @apply bg-[var(--admin-bg-light)] text-gray-900 font-roboto;
+}
+
+.card {
+  @apply bg-[var(--primary-dark)] rounded-lg shadow-lg p-4 transform transition-transform hover:scale-105;
+}
+
+.btn-primary {
+  @apply bg-[var(--accent-green)] text-black font-semibold py-2 px-4 rounded-lg hover:bg-[var(--accent-green)]/80 transition-colors;
+}
+
+.admin-btn {
+  @apply bg-[var(--admin-accent)] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[var(--admin-accent)]/80 transition-colors;
+}
+
+.sidebar {
+  @apply fixed top-0 left-0 h-full w-64 bg-[var(--primary-dark)] p-4;
+}
+
+.navbar {
+  @apply bg-[var(--primary-dark)] p-4 flex justify-between items-center;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    @apply w-16;
+  }
+}

@@ -1,0 +1,127 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/gamevault?replicaSet=rs0
+      - REDIS_SENTINEL_HOST_1=redis-sentinel-1
+      - REDIS_SENTINEL_PORT_1=26379
+      - REDIS_SENTINEL_HOST_2=redis-sentinel-2
+      - REDIS_SENTINEL_PORT_2=26379
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - SNS_TOPIC_ARN=${SNS_TOPIC_ARN}
+      - ADMIN_WHITELIST_IPS=${ADMIN_WHITELIST_IPS}
+      - CORS_ORIGIN=http://localhost:5173
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5044
+    depends_on:
+      - mongodb
+      - redis-sentinel-1
+      - redis-sentinel-2
+      - logstash
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:5000
+      - VITE_WEBSOCKET_URL=https://global-accelerator-endpoint
+    depends_on:
+      - backend
+
+  mongodb:
+    image: mongo:5.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    command: mongod --replSet rs0
+    volumes:
+      - mongodb_data:/data/db
+
+  redis-sentinel-1:
+    image: redis:6.2
+    ports:
+      - "6379:6379"
+      - "26379:26379"
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    volumes:
+      - ./redis-sentinel-1.conf:/usr/local/etc/redis/sentinel.conf
+
+  redis-sentinel-2:
+    image: redis:6.2
+    ports:
+      - "6380:6379"
+      - "26380:26379"
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    volumes:
+      - ./redis-sentinel-2.conf:/usr/local/etc/redis/sentinel.conf
+
+  elasticsearch:
+    image: elasticsearch:7.17.0
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+  logstash:
+    image: logstash:7.17.0
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: kibana:7.17.0
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  prometheus:
+    image: prom/prometheus:v2.37.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: grafana/grafana:8.5.5
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  mongodb_data:
+  redis_data:
+  elasticsearch_data:
+  grafana_data:

@@ -1,0 +1,91 @@
+├── backend/
+│   ├── config/
+│   │   ├── db.js
+│   │   └── env.js
+│   ├── controllers/
+│   │   ├── gameController.js
+│   │   └── tournamentController.js
+│   ├── locales/
+│   │   ├── en.json
+│   │   ├── ru.json
+│   │   ├── uk.json
+│   │   ├── hi.json
+│   │   ├── zh.json
+│   │   ├── tg.json
+│   │   └── uz.json
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── models/
+│   │   ├── ChatBan.js
+│   │   ├── GameHistory.js
+│   │   ├── GameSettings.js
+│   │   ├── Lottery.js
+│   │   ├── Message.js
+│   │   ├── Promotion.js
+│   │   ├── Referral.js
+│   │   ├── Tournament.js
+│   │   ├── Transaction.js
+│   │   └── User.js
+│   ├── routes/
+│   │   ├── admin.js
+│   │   ├── auth.js
+│   │   ├── deposits.js
+│   │   ├── games.js
+│   │   ├── promotions.js
+│   │   └── tournaments.js
+│   ├── scripts/
+│   │   ├── backup.sh
+│   │   ├── lotteryCron.js
+│   │   └── restore.sh
+│   ├── tests/
+│   │   ├── admin.test.js
+│   │   ├── auth.test.js
+│   │   ├── game.test.js
+│   │   ├── promotion.test.js
+│   │   └── tournament.test.js
+│   ├── utils/
+│   │   ├── levelSystem.js
+│   │   └── logger.js
+│   ├── socket.js
+│   ├── server.js
+│   ├── package.json
+│   ├── .env
+│   └── Dockerfile
+├── frontend/
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── AdminGameSettings.jsx
+│   │   │   ├── AdminPromotions.jsx
+│   │   │   ├── CreateTournamentForm.jsx
+│   │   │   ├── GameCard.jsx
+│   │   │   ├── GameHistory.jsx
+│   │   │   ├── Leaderboard.jsx
+│   │   │   ├── PendingWithdrawals.jsx
+│   │   │   ├── Promotions.jsx
+│   │   │   ├── SlotMachine.jsx
+│   │   │   ├── TransactionHistory.jsx
+│   │   │   └── TournamentChat.jsx
+│   │   ├── locales/
+│   │   │   ├── en.json
+│   │   │   ├── ru.json
+│   │   │   ├── uk.json
+│   │   │   ├── hi.json
+│   │   │   ├── zh.json
+│   │   │   ├── tg.json
+│   │   │   └── uz.json
+│   │   ├── i18n.js
+│   │   ├── index.css
+│   │   ├── App.jsx
+│   │   └── index.js
+│   ├── package.json
+│   ├── tailwind.config.js
+│   ├── vite.config.js
+│   └── Dockerfile
+├── docs/
+│   ├── promotions.md
+│   ├── tournaments.md
+│   └── api.md
+├── README.md
+└── docker-compose.yml
